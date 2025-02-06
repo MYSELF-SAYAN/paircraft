@@ -1,18 +1,17 @@
-# Use Node.js base image
-FROM node:18
+# Dockerfile
+FROM node:20-alpine
 
-# Set working directory
-WORKDIR /usr/src/app
+# Install Docker CLI
+RUN apk add --no-cache docker-cli
 
-# Copy package.json and install dependencies
-COPY package.json package-lock.json ./
+# Create sandbox directory with proper permissions
+RUN mkdir -p /sandbox && \
+    chmod 777 /sandbox
+
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
-
-# Copy server files
 COPY . .
 
-# Expose port
-EXPOSE 5000
-
-# Start server
+EXPOSE 3000
 CMD ["node", "index.js"]
